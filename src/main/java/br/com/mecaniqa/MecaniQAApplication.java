@@ -34,51 +34,219 @@ public class MecaniQAApplication {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Opção 1 selecionada: Adicionar Peça");
-                    // Lógica para adicionar peça
+                    adicionarPeca(scanner);
                     break;
                 case 2:
-                    System.out.println("Opção 2 selecionada: Listar Peças");
-                    // Lógica para listar peças
+                    Gerenciador.listarPecas();
                     break;
                 case 3:
-                    System.out.println("Opção 3 selecionada: Atualizar Peça");
-                    // Lógica para atualizar peça
+                    atualizarPeca(scanner);
                     break;
                 case 4:
-                    System.out.println("Opção 4 selecionada: Remover Peça");
-                    // Lógica para remover peça
+                    removerPeca(scanner);
                     break;
                 case 5:
-                    System.out.println("Opção 5 selecionada: Buscar Peça por Código");
-                    // Lógica para buscar peça
+                    buscarPeca(scanner);
                     break;
                 case 6:
-                    System.out.println("Opção 6 selecionada: Adicionar Serviço");
-                    // Lógica para adicionar serviço
+                    adicionarServico(scanner);
                     break;
                 case 7:
-                    System.out.println("Opção 7 selecionada: Listar Serviços");
-                    // Lógica para listar serviços
+                    Gerenciador.listarServicos();
                     break;
                 case 8:
-                    System.out.println("Opção 8 selecionada: Atualizar Serviço");
-                    // Lógica para atualizar serviço
+                    atualizarServico(scanner);
                     break;
                 case 9:
-                    System.out.println("Opção 9 selecionada: Remover Serviço");
-                    // Lógica para remover serviço
+                    removerServico(scanner);
                     break;
                 case 10:
-                    System.out.println("Opção 10 selecionada: Buscar Serviço por Código");
-                    // Lógica para buscar serviço
+                    buscarServico(scanner);
                     break;
                 case 0:
                     System.out.println("Saindo do sistema...");
                     scanner.close();
+                    break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
-        } while(choice != 0);
+        } while (choice != 0);
     }
+
+    private static void adicionarPeca(Scanner scanner) {
+        Peca p = new Peca();
+
+        System.out.print("Nome da peça: ");
+        p.nome = scanner.nextLine();
+
+        System.out.print("Fabricante: ");
+        p.fabricante = scanner.nextLine();
+
+        System.out.print("Preço de custo: ");
+        p.precoCusto = lerDouble(scanner);
+
+        System.out.print("Preço de venda: ");
+        p.precoVenda = lerDouble(scanner);
+
+        System.out.print("Quantidade em estoque: ");
+        p.quantidadeEstoque = lerInt(scanner);
+
+        Gerenciador.inserirPeca(p);
+    }
+
+    private static void atualizarPeca(Scanner scanner) {
+        System.out.print("Código da peça a atualizar: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarPeca(codigo);
+        if (indice == -1) {
+            System.out.println("Peça não encontrada.");
+            return;
+        }
+
+        Peca novosDados = new Peca();
+
+        System.out.print("Novo nome: ");
+        novosDados.nome = scanner.nextLine();
+
+        System.out.print("Novo fabricante: ");
+        novosDados.fabricante = scanner.nextLine();
+
+        System.out.print("Novo preço de custo: ");
+        novosDados.precoCusto = lerDouble(scanner);
+
+        System.out.print("Novo preço de venda: ");
+        novosDados.precoVenda = lerDouble(scanner);
+
+        System.out.print("Nova quantidade em estoque: ");
+        novosDados.quantidadeEstoque = lerInt(scanner);
+
+        Gerenciador.atualizarPeca(codigo, novosDados);
+    }
+
+    private static void removerPeca(Scanner scanner) {
+        System.out.print("Código da peça a remover: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarPeca(codigo);
+        if (indice == -1) {
+            System.out.println("Peça não encontrada.");
+            return;
+        }
+
+        Gerenciador.removerPeca(indice);
+    }
+
+    private static void buscarPeca(Scanner scanner) {
+        System.out.print("Código da peça a buscar: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarPeca(codigo);
+        if (indice == -1) {
+            System.out.println("Peça não encontrada.");
+            return;
+        }
+
+        Peca p = Gerenciador.pecas[indice];
+        System.out.println(
+            "Codigo: " + p.codigo +
+            " | Nome: " + p.nome +
+            " | Fabricante: " + p.fabricante +
+            " | Preco Custo: R$" + p.precoCusto +
+            " | Preco Venda: R$" + p.precoVenda +
+            " | Estoque: " + p.quantidadeEstoque
+        );
+    }
+
+    private static void adicionarServico(Scanner scanner) {
+        Servico s = new Servico();
+
+        System.out.print("Descrição do serviço: ");
+        s.descricao = scanner.nextLine();
+
+        System.out.print("Tempo estimado (minutos): ");
+        s.tempoEstimadoMinutos = lerDouble(scanner);
+
+        System.out.print("Valor da mão de obra: ");
+        s.valorMaoDeObra = lerDouble(scanner);
+
+        Gerenciador.inserirServico(s);
+    }
+
+    private static void atualizarServico(Scanner scanner) {
+        System.out.print("Código do serviço a atualizar: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarServico(codigo);
+        if (indice == -1) {
+            System.out.println("Serviço não encontrado.");
+            return;
+        }
+
+        Servico novosDados = new Servico();
+
+        System.out.print("Nova descrição: ");
+        novosDados.descricao = scanner.nextLine();
+
+        System.out.print("Novo tempo estimado (minutos): ");
+        novosDados.tempoEstimadoMinutos = lerDouble(scanner);
+
+        System.out.print("Novo valor da mão de obra: ");
+        novosDados.valorMaoDeObra = lerDouble(scanner);
+
+        Gerenciador.atualizarServico(codigo, novosDados);
+    }
+
+    private static void removerServico(Scanner scanner) {
+        System.out.print("Código do serviço a remover: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarServico(codigo);
+        if (indice == -1) {
+            System.out.println("Serviço não encontrado.");
+            return;
+        }
+
+        Gerenciador.removerServico(indice);
+    }
+
+    private static void buscarServico(Scanner scanner) {
+        System.out.print("Código do serviço a buscar: ");
+        int codigo = lerInt(scanner);
+
+        int indice = Gerenciador.buscarServico(codigo);
+        if (indice == -1) {
+            System.out.println("Serviço não encontrado.");
+            return;
+        }
+
+        Servico s = Gerenciador.servicos[indice];
+        System.out.println(
+            "Codigo: " + s.codigo +
+            " | Descricao: " + s.descricao +
+            " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
+            " | Valor mao de obra: R$" + s.valorMaoDeObra
+        );
+    }
+
+    private static int lerInt(Scanner scanner) {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Valor inválido. Digite um número inteiro: ");
+            }
+        }
+    }
+
+    private static double lerDouble(Scanner scanner) {
+        while (true) {
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Valor inválido. Digite um número (use ponto para decimais): ");
+            }
+        }
+    }
+
 }

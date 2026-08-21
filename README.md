@@ -19,8 +19,9 @@ Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de
 
 ## Membros da Equipe
 
-* Membro 1
-* Membro 2
-* Membro 3
-* Membro 4
-* Membro 5
+* Caio Josué Ribeiro Bastos.
+* Camilly Vitória Ribeiro Ferreira.
+* Davi Mercês da Silva.
+* Filipe Maia Archanjo dos Santos de Santana.
+* Jackson Souza de Souza.
+* Julia Gomes de Souza.

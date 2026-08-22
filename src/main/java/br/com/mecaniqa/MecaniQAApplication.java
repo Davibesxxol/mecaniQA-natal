@@ -128,13 +128,7 @@ public class MecaniQAApplication {
         System.out.print("Código da peça a remover: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarPeca(codigo);
-        if (indice == -1) {
-            System.out.println("Peça não encontrada.");
-            return;
-        }
-
-        Gerenciador.removerPeca(indice);
+        Gerenciador.removerPeca(codigo);
     }
 
     private static void buscarPeca(Scanner scanner) {
@@ -201,13 +195,7 @@ public class MecaniQAApplication {
         System.out.print("Código do serviço a remover: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarServico(codigo);
-        if (indice == -1) {
-            System.out.println("Serviço não encontrado.");
-            return;
-        }
-
-        Gerenciador.removerServico(indice);
+        Gerenciador.removerServico(codigo);
     }
 
     private static void buscarServico(Scanner scanner) {

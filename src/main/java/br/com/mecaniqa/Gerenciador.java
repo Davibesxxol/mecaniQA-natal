@@ -119,9 +119,11 @@ public class Gerenciador {
         System.out.println("Servico atualizado com sucesso!");
     }
 
-    public static void removerPeca(int indice) {
-        if (indice < 0 || indice >= totalPecas) {
-            System.out.println("Erro: indice invalido para remocao de peca.");
+    public static void removerPeca(int codigo) {
+        int indice = buscarPeca(codigo);
+
+        if (indice == -1) {
+            System.out.println("Erro: peca com codigo " + codigo + " nao encontrada.");
             return;
         }
 
@@ -134,9 +136,11 @@ public class Gerenciador {
         System.out.println("Peca removida com sucesso!");
     }
 
-    public static void removerServico(int indice) {
-        if (indice < 0 || indice >= totalServicos) {
-            System.out.println("Erro: indice invalido para remocao de servico.");
+    public static void removerServico(int codigo) {
+        int indice = buscarServico(codigo);
+
+        if (indice == -1) {
+            System.out.println("Erro: servico com codigo " + codigo + " nao encontrado.");
             return;
         }
 

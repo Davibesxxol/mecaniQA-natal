@@ -1,12 +1,16 @@
 package br.com.mecaniqa;
 
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class OrdemServico {
 
     public int codigo;
     public ArrayList<Servico> servicos = new ArrayList<>();
     public StatusOS status = StatusOS.EM_ABERTO;
+
+    public static Queue<Servico> filaAtendimento = new LinkedList<>();
 
     public void adicionarServico(Servico servico) {
         if (status != StatusOS.EM_ABERTO) {
@@ -22,6 +26,26 @@ public class OrdemServico {
             return;
         }
         servicos.remove(servico);
+    }
+
+    public void mudarStatus(StatusOS novoStatus) {
+        status = novoStatus;
+
+        if (novoStatus == StatusOS.AGUARDANDO_EXECUCAO) {
+            for (Servico s : servicos) {
+                filaAtendimento.offer(s);
+            }
+            System.out.println("Servicos da OS " + codigo + " despachados para a fila de atendimento.");
+        }
+    }
+
+    public static Servico atenderProximoServico() {
+        Servico proximo = filaAtendimento.poll();
+        if (proximo == null) {
+            System.out.println("Erro: fila de atendimento vazia.");
+            return null;
+        }
+        return proximo;
     }
 
     public int quantidadeServicos() {

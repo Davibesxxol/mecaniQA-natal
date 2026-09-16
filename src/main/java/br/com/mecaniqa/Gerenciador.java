@@ -43,12 +43,12 @@ public class Gerenciador {
         for (int i = 0; i < totalPecas; i++) {
             Peca p = pecas[i];
             System.out.println(
-                "Codigo: " + p.codigo +
-                " | Nome: " + p.nome +
-                " | Fabricante: " + p.fabricante +
-                " | Preco Custo: R$" + p.precoCusto +
-                " | Preco Venda: R$" + p.precoVenda +
-                " | Estoque: " + p.quantidadeEstoque
+                    "Codigo: " + p.codigo +
+                            " | Nome: " + p.nome +
+                            " | Fabricante: " + p.fabricante +
+                            " | Preco Custo: R$" + p.precoCusto +
+                            " | Preco Venda: R$" + p.precoVenda +
+                            " | Estoque: " + p.quantidadeEstoque
             );
         }
     }
@@ -61,10 +61,10 @@ public class Gerenciador {
         for (int i = 0; i < totalServicos; i++) {
             Servico s = servicos[i];
             System.out.println(
-                "Codigo: " + s.codigo +
-                " | Descricao: " + s.descricao +
-                " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
-                " | Valor mao de obra: R$" + s.valorMaoDeObra
+                    "Codigo: " + s.codigo +
+                            " | Descricao: " + s.descricao +
+                            " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
+                            " | Valor mao de obra: R$" + s.valorMaoDeObra
             );
         }
     }
@@ -151,6 +151,46 @@ public class Gerenciador {
         servicos[totalServicos - 1] = null;
         totalServicos--;
         System.out.println("Servico removido com sucesso!");
+    }
+
+    public static void ordenarPecas(ChaveOrdenacao chave) {
+        for (int i = 0; i < totalPecas - 1; i++) {
+            for (int j = 0; j < totalPecas - 1 - i; j++) {
+
+                boolean trocar;
+                if (chave == ChaveOrdenacao.NOME) {
+                    trocar = pecas[j].nome.compareTo(pecas[j + 1].nome) > 0;
+                } else {
+                    trocar = pecas[j].codigo > pecas[j + 1].codigo;
+                }
+
+                if (trocar) {
+                    Peca temp = pecas[j];
+                    pecas[j] = pecas[j + 1];
+                    pecas[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void ordenarServicos(ChaveOrdenacao chave) {
+        for (int i = 0; i < totalServicos - 1; i++) {
+            for (int j = 0; j < totalServicos - 1 - i; j++) {
+
+                boolean trocar;
+                if (chave == ChaveOrdenacao.NOME) {
+                    trocar = servicos[j].descricao.compareTo(servicos[j + 1].descricao) > 0;
+                } else {
+                    trocar = servicos[j].codigo > servicos[j + 1].codigo;
+                }
+
+                if (trocar) {
+                    Servico temp = servicos[j];
+                    servicos[j] = servicos[j + 1];
+                    servicos[j + 1] = temp;
+                }
+            }
+        }
     }
 
 }

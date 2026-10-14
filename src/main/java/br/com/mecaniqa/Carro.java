@@ -8,4 +8,9 @@ public class Carro {
     public int ano;
     public EstiloCarro estilo;
 
+    public String toCSV() {
+
+        return this.placa + ";" + this.modelo + ";" + this.estilo;
+    }
+
 }

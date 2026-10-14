@@ -9,4 +9,9 @@ public class Peca {
     public double precoVenda;
     public int quantidadeEstoque;
 
+    public String toCSV() {
+
+        return this.codigo + ";" + this.nome + ";" + this.fabricante + ";" + this.precoVenda;
+    }
+
 }

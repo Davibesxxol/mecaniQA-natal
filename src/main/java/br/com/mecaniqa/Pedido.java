@@ -50,4 +50,8 @@ public class Pedido {
         System.out.println("Pedido " + codigo + " finalizado com sucesso!");
     }
 
+    public String toCSV() {
+        return this.codigo + ";" + this.desconto + ";" + this.finalizado;
+    }
+
 }

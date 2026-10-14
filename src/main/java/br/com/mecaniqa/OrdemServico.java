@@ -72,4 +72,8 @@ public class OrdemServico {
         System.out.println("Valor total: R$" + valorTotal());
     }
 
+    public String toCSV() {
+
+        return this.codigo + ";" + this.status;
+    }
 }

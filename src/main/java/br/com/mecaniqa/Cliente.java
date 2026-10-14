@@ -10,4 +10,9 @@ public class Cliente {
     public String email;
     public ArrayList<Carro> carros = new ArrayList<>();
 
+    public String toCSV() {
+
+        return this.nome + ";" + this.telefone + ";" + this.email;
+    }
+
 }

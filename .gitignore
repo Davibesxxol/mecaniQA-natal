@@ -19,3 +19,4 @@ gradlew.bat
 # OS-specific
 .DS_Store
 Thumbs.db
+dados/

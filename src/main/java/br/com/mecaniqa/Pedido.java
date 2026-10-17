@@ -51,7 +51,16 @@ public class Pedido {
     }
 
     public String toCSV() {
-        return this.codigo + ";" + this.desconto + ";" + this.finalizado;
+        return codigo + ";" + desconto + ";" + finalizado;
+    }
+
+    public static Pedido fromCSV(String linha) {
+        String[] c = linha.split(";");
+        Pedido pedido = new Pedido();
+        pedido.codigo = Integer.parseInt(c[0]);
+        pedido.desconto = Double.parseDouble(c[1]);
+        pedido.finalizado = Boolean.parseBoolean(c[2]);
+        return pedido;
     }
 
 }

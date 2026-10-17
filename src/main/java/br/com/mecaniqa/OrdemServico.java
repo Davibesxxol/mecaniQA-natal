@@ -7,8 +7,8 @@ import java.util.LinkedList;
 public class OrdemServico {
 
     public int codigo;
-    public ArrayList<Servico> servicos = new ArrayList<>();
     public StatusOS status = StatusOS.EM_ABERTO;
+    public ArrayList<Servico> servicos = new ArrayList<>();
 
     public static Queue<Servico> filaAtendimento = new LinkedList<>();
 
@@ -73,7 +73,15 @@ public class OrdemServico {
     }
 
     public String toCSV() {
-
-        return this.codigo + ";" + this.status;
+        return codigo + ";" + status;
     }
+
+    public static OrdemServico fromCSV(String linha) {
+        String[] c = linha.split(";");
+        OrdemServico os = new OrdemServico();
+        os.codigo = Integer.parseInt(c[0]);
+        os.status = StatusOS.valueOf(c[1]);
+        return os;
+    }
+
 }

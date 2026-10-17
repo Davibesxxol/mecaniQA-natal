@@ -8,6 +8,8 @@ public class MecaniQAApplication {
         Scanner scanner = new Scanner(System.in);
         int choice = 0;
 
+        PersistenciaCSV.carregarTudo();
+
         do {
             System.out.println("\n--- MecâniQA Gestão ---");
             System.out.println("1. Adicionar Peça");
@@ -64,6 +66,7 @@ public class MecaniQAApplication {
                     buscarServico(scanner);
                     break;
                 case 0:
+                    PersistenciaCSV.salvarTudo();
                     System.out.println("Saindo do sistema...");
                     scanner.close();
                     break;
@@ -143,12 +146,12 @@ public class MecaniQAApplication {
 
         Peca p = Gerenciador.pecas[indice];
         System.out.println(
-            "Codigo: " + p.codigo +
-            " | Nome: " + p.nome +
-            " | Fabricante: " + p.fabricante +
-            " | Preco Custo: R$" + p.precoCusto +
-            " | Preco Venda: R$" + p.precoVenda +
-            " | Estoque: " + p.quantidadeEstoque
+                "Codigo: " + p.codigo +
+                        " | Nome: " + p.nome +
+                        " | Fabricante: " + p.fabricante +
+                        " | Preco Custo: R$" + p.precoCusto +
+                        " | Preco Venda: R$" + p.precoVenda +
+                        " | Estoque: " + p.quantidadeEstoque
         );
     }
 
@@ -159,7 +162,7 @@ public class MecaniQAApplication {
         s.descricao = scanner.nextLine();
 
         System.out.print("Tempo estimado (minutos): ");
-        s.tempoEstimadoMinutos = lerDouble(scanner);
+        s.tempoEstimadoMinutos = lerInt(scanner);
 
         System.out.print("Valor da mão de obra: ");
         s.valorMaoDeObra = lerDouble(scanner);
@@ -183,7 +186,7 @@ public class MecaniQAApplication {
         novosDados.descricao = scanner.nextLine();
 
         System.out.print("Novo tempo estimado (minutos): ");
-        novosDados.tempoEstimadoMinutos = lerDouble(scanner);
+        novosDados.tempoEstimadoMinutos = lerInt(scanner);
 
         System.out.print("Novo valor da mão de obra: ");
         novosDados.valorMaoDeObra = lerDouble(scanner);
@@ -210,10 +213,10 @@ public class MecaniQAApplication {
 
         Servico s = Gerenciador.servicos[indice];
         System.out.println(
-            "Codigo: " + s.codigo +
-            " | Descricao: " + s.descricao +
-            " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
-            " | Valor mao de obra: R$" + s.valorMaoDeObra
+                "Codigo: " + s.codigo +
+                        " | Descricao: " + s.descricao +
+                        " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
+                        " | Valor mao de obra: R$" + s.valorMaoDeObra
         );
     }
 

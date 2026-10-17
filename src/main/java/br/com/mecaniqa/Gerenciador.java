@@ -1,5 +1,7 @@
 package br.com.mecaniqa;
 
+import java.util.ArrayList;
+
 public class Gerenciador {
 
     public static Peca[] pecas = new Peca[100];
@@ -7,6 +9,10 @@ public class Gerenciador {
 
     public static int totalPecas = 0;
     public static int totalServicos = 0;
+
+    public static ArrayList<Cliente> clientes = new ArrayList<>();
+    public static ArrayList<Pedido> pedidos = new ArrayList<>();
+    public static ArrayList<OrdemServico> ordens = new ArrayList<>();
 
     private static int proximoCodigoPeca = 1;
     private static int proximoCodigoServico = 1;
@@ -190,6 +196,30 @@ public class Gerenciador {
                     servicos[j + 1] = temp;
                 }
             }
+        }
+    }
+
+    public static void carregarPeca(Peca p) {
+        if (totalPecas >= pecas.length) {
+            System.out.println("Erro: array de pecas cheio, peca " + p.codigo + " nao carregada.");
+            return;
+        }
+        pecas[totalPecas] = p;
+        totalPecas++;
+        if (p.codigo >= proximoCodigoPeca) {
+            proximoCodigoPeca = p.codigo + 1;
+        }
+    }
+
+    public static void carregarServico(Servico s) {
+        if (totalServicos >= servicos.length) {
+            System.out.println("Erro: array de servicos cheio, servico " + s.codigo + " nao carregado.");
+            return;
+        }
+        servicos[totalServicos] = s;
+        totalServicos++;
+        if (s.codigo >= proximoCodigoServico) {
+            proximoCodigoServico = s.codigo + 1;
         }
     }
 

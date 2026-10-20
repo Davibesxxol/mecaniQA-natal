@@ -70,6 +70,7 @@ public class MecaniQAApplication {
                     System.out.println("Saindo do sistema...");
                     scanner.close();
                     break;
+
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }

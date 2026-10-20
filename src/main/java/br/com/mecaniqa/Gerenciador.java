@@ -10,6 +10,8 @@ public class Gerenciador {
     public static int totalPecas = 0;
     public static int totalServicos = 0;
 
+    public static No raiz = null;
+
     public static ArrayList<Cliente> clientes = new ArrayList<>();
     public static ArrayList<Pedido> pedidos = new ArrayList<>();
     public static ArrayList<OrdemServico> ordens = new ArrayList<>();
@@ -221,6 +223,51 @@ public class Gerenciador {
         if (s.codigo >= proximoCodigoServico) {
             proximoCodigoServico = s.codigo + 1;
         }
+    }
+
+    public static void inserir(int id, Object registro) {
+        if (registro == null) {
+            System.out.println("Erro: nao e possivel indexar um registro nulo.");
+            return;
+        }
+        raiz = inserirNo(raiz, id, registro);
+    }
+
+    private static No inserirNo(No atual, int id, Object registro) {
+        if (atual == null) {
+            No novo = new No();
+            novo.id = id;
+            novo.registro = registro;
+            novo.altura = 1;
+            return novo;
+        }
+
+        if (id < atual.id) {
+            atual.esquerda = inserirNo(atual.esquerda, id, registro);
+        } else if (id > atual.id) {
+            atual.direita = inserirNo(atual.direita, id, registro);
+        } else {
+            System.out.println("Erro: ja existe um registro com o id " + id + " na arvore.");
+        }
+
+        return atual;
+    }
+
+    public static Object buscar(int id) {
+        return buscarNo(raiz, id);
+    }
+
+    private static Object buscarNo(No atual, int id) {
+        if (atual == null) {
+            return null;
+        }
+        if (id == atual.id) {
+            return atual.registro;
+        }
+        if (id < atual.id) {
+            return buscarNo(atual.esquerda, id);
+        }
+        return buscarNo(atual.direita, id);
     }
 
 }

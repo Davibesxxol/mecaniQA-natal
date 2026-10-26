@@ -248,9 +248,11 @@ public class Gerenciador {
             atual.direita = inserirNo(atual.direita, id, registro);
         } else {
             System.out.println("Erro: ja existe um registro com o id " + id + " na arvore.");
+            return atual;
         }
 
-        return atual;
+        atual.altura = calcularAltura(atual);
+        return balancear(atual);
     }
 
     public static Object buscar(int id) {
@@ -268,6 +270,112 @@ public class Gerenciador {
             return buscarNo(atual.esquerda, id);
         }
         return buscarNo(atual.direita, id);
+    }
+
+    public static void exibirEmOrdem(No raiz) {
+        if (raiz == null) {
+            return;
+        }
+        exibirEmOrdem(raiz.esquerda);
+        exibirRegistro(raiz);
+        exibirEmOrdem(raiz.direita);
+    }
+
+    private static void exibirRegistro(No no) {
+        Object registro = no.registro;
+
+        if (registro instanceof Peca p) {
+            System.out.println("Codigo: " + no.id + " | Peca: " + p.nome + " | Fabricante: " + p.fabricante
+                    + " | Preco: R$" + p.precoVenda);
+        } else if (registro instanceof Servico s) {
+            System.out.println("Codigo: " + no.id + " | Servico: " + s.descricao + " | Tempo (min): "
+                    + s.tempoEstimadoMinutos + " | Mao de obra: R$" + s.valorMaoDeObra);
+        } else if (registro instanceof Cliente c) {
+            System.out.println("Codigo: " + no.id + " | Cliente: " + c.nome + " | Telefone: " + c.telefone
+                    + " | Email: " + c.email);
+        } else if (registro instanceof OrdemServico os) {
+            System.out.println("Codigo: " + no.id + " | OS | Status: " + os.status + " | Servicos: "
+                    + os.quantidadeServicos() + " | Valor total: R$" + os.valorTotal());
+        } else if (registro instanceof Pedido pedido) {
+            System.out.println("Codigo: " + no.id + " | Pedido | Itens: " + pedido.itens.size()
+                    + " | Total: R$" + pedido.calcularTotal());
+        } else {
+            System.out.println("Codigo: " + no.id + " | " + registro);
+        }
+    }
+
+    private static int alturaDe(No no) {
+        if (no == null) {
+            return 0;
+        }
+        return no.altura;
+    }
+
+    public static int calcularAltura(No no) {
+        return 1 + Math.max(alturaDe(no.esquerda), alturaDe(no.direita));
+    }
+
+    public static int fatorBalanceamento(No no) {
+        if (no == null) {
+            return 0;
+        }
+        return alturaDe(no.esquerda) - alturaDe(no.direita);
+    }
+
+    private static No balancear(No no) {
+        int fator = fatorBalanceamento(no);
+
+        if (fator > 1) {
+            if (fatorBalanceamento(no.esquerda) < 0) {
+                return rotacaoEsquerdaDireita(no);
+            }
+            return rotacaoDireita(no);
+        }
+
+        if (fator < -1) {
+            if (fatorBalanceamento(no.direita) > 0) {
+                return rotacaoDireitaEsquerda(no);
+            }
+            return rotacaoEsquerda(no);
+        }
+
+        return no;
+    }
+
+    public static No rotacaoDireita(No y) {
+        No x = y.esquerda;
+        No meio = x.direita;
+
+        x.direita = y;
+        y.esquerda = meio;
+
+        y.altura = calcularAltura(y);
+        x.altura = calcularAltura(x);
+
+        return x;
+    }
+
+    public static No rotacaoEsquerda(No x) {
+        No y = x.direita;
+        No meio = y.esquerda;
+
+        y.esquerda = x;
+        x.direita = meio;
+
+        x.altura = calcularAltura(x);
+        y.altura = calcularAltura(y);
+
+        return y;
+    }
+
+    public static No rotacaoEsquerdaDireita(No no) {
+        no.esquerda = rotacaoEsquerda(no.esquerda);
+        return rotacaoDireita(no);
+    }
+
+    public static No rotacaoDireitaEsquerda(No no) {
+        no.direita = rotacaoDireita(no.direita);
+        return rotacaoEsquerda(no);
     }
 
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Gerenciador {
 
-  // 1. RAÍZES SEPARADAS: Substituem os arrays e ArrayLists antigos
     public static No raizPecas = null;
     public static No raizServicos = null;
     public static No raizClientes = null;
@@ -13,14 +12,11 @@ public class Gerenciador {
     private static int proximoCodigoPeca = 1;
     private static int proximoCodigoServico = 1;
 
-    // ==========================================
-    // MÉTODOS INTEGADOS À ÁRVORE AVL
-    // ==========================================
-    
+
     public static void inserirPeca(Peca p) {
-        if (p.codigo == 0) { // Se for nova, gera um ID
+        if (p.codigo == 0) {
             p.codigo = proximoCodigoPeca++;
-        } else if (p.codigo >= proximoCodigoPeca) { // Se veio do CSV, atualiza o contador
+        } else if (p.codigo >= proximoCodigoPeca) { 
             proximoCodigoPeca = p.codigo + 1;
         }
         raizPecas = inserirNo(raizPecas, p.codigo, p);
@@ -58,7 +54,7 @@ public class Gerenciador {
         if (obj instanceof Peca) {
             return (Peca) obj;
         }
-        return null; // Não encontrou
+        return null; 
     }
 
     public static Servico buscarServico(int codigo) {

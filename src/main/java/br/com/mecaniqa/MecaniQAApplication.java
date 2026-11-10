@@ -1,6 +1,6 @@
 package br.com.mecaniqa;
 
-import csv.PersistenciaCSV;
+import br.com.mecaniqa.csv.PersistenciaCSV;
 import entidades.Gerenciador;
 import entidades.Peca;
 import entidades.Servico;

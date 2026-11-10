@@ -34,7 +34,7 @@ public class MapaLogistico {
             return null;
         }
 
-        // Instancia o br.com.csv.grafo com a quantidade exata de filiais encontradas
+        // Instancia o br.com.br.com.mecaniqa.csv.grafo com a quantidade exata de filiais encontradas
         Grafo mapa = new Grafo(listaFiliais.size());
 
         // PASSO 2: Ler de novo para popular as arestas de mão dupla
@@ -63,7 +63,7 @@ public class MapaLogistico {
             return mapa;
 
         } catch (IOException e) {
-            System.out.println("[Erro] Falha ao popular o br.com.csv.grafo: " + e.getMessage());
+            System.out.println("[Erro] Falha ao popular o br.com.br.com.mecaniqa.csv.grafo: " + e.getMessage());
             return null;
         }
     }

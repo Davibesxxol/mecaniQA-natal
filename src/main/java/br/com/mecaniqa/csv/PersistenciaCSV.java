@@ -1,4 +1,4 @@
-package csv;
+package br.com.mecaniqa.csv;
 
 import br.com.mecaniqa.entidades.*;
 import br.com.mecaniqa.enums.StatusOS;
@@ -15,13 +15,13 @@ import java.util.ArrayList;
 public class PersistenciaCSV {
 
     private static final String PASTA = "dados/";
-    private static final String ARQ_PECAS = PASTA + "pecas.br.com.csv";
-    private static final String ARQ_SERVICOS = PASTA + "servicos.br.com.csv";
-    private static final String ARQ_CLIENTES = PASTA + "clientes.br.com.csv";
-    private static final String ARQ_PEDIDOS = PASTA + "pedidos.br.com.csv";
-    private static final String ARQ_ITENS_PEDIDO = PASTA + "itens_pedido.br.com.csv";
-    private static final String ARQ_ORDENS = PASTA + "ordens_servico.br.com.csv";
-    private static final String ARQ_SERVICOS_OS = PASTA + "servicos_os.br.com.csv";
+    private static final String ARQ_PECAS = PASTA + "pecas.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_SERVICOS = PASTA + "servicos.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_CLIENTES = PASTA + "clientes.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_PEDIDOS = PASTA + "pedidos.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_ITENS_PEDIDO = PASTA + "itens_pedido.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_ORDENS = PASTA + "ordens_servico.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_SERVICOS_OS = PASTA + "servicos_os.br.com.br.com.mecaniqa.csv";
 
     public static boolean existemDados() {
         return new File(ARQ_PECAS).exists();

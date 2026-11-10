@@ -1,4 +1,4 @@
-package br.com.mecaniqa;
+package br.com.mecaniqa.nos;
 
 public class No {
 

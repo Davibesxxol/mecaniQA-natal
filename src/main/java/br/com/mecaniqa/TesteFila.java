@@ -1,5 +1,9 @@
     package br.com.mecaniqa;
 
+    import entidades.OrdemServico;
+    import entidades.Servico;
+    import enums.StatusOS;
+
     public class TesteFila {
 
         public static void main(String[] args) {

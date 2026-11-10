@@ -1,4 +1,7 @@
-package br.com.mecaniqa;
+package br.com.mecaniqa.entidades;
+
+import br.com.mecaniqa.enums.ChaveOrdenacao;
+import br.com.mecaniqa.nos.No;
 
 import java.util.ArrayList;
 
@@ -247,7 +250,7 @@ public class Gerenciador {
         } else if (id > atual.id) {
             atual.direita = inserirNo(atual.direita, id, registro);
         } else {
-            System.out.println("Erro: ja existe um registro com o id " + id + " na arvore.");
+            System.out.println("Erro: ja existe um registro com o id " + id + " na br.com.mecaniqa.arvore.");
             return atual;
         }
 

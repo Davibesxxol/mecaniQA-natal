@@ -1,5 +1,8 @@
 package br.com.mecaniqa;
 
+import entidades.Gerenciador;
+import nos.No;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -30,21 +33,21 @@ public class Testeavl {
         Gerenciador.raiz = null;
         inserirTodos(1, 2, 3);
         verificar("raiz virou o no 2", Gerenciador.raiz.id == 2);
-        verificar("arvore valida", arvoreValida());
+        verificar("br.com.mecaniqa.arvore valida", arvoreValida());
 
         System.out.println();
         System.out.println("=== Rotacao esquerda-direita (3, 1, 2) ===");
         Gerenciador.raiz = null;
         inserirTodos(3, 1, 2);
         verificar("raiz virou o no 2", Gerenciador.raiz.id == 2);
-        verificar("arvore valida", arvoreValida());
+        verificar("br.com.mecaniqa.arvore valida", arvoreValida());
 
         System.out.println();
         System.out.println("=== Rotacao direita-esquerda (1, 3, 2) ===");
         Gerenciador.raiz = null;
         inserirTodos(1, 3, 2);
         verificar("raiz virou o no 2", Gerenciador.raiz.id == 2);
-        verificar("arvore valida", arvoreValida());
+        verificar("br.com.mecaniqa.arvore valida", arvoreValida());
 
         System.out.println();
         System.out.println("=== 100000 ids em ordem crescente (pior caso da BST sem balanceamento) ===");
@@ -53,7 +56,7 @@ public class Testeavl {
         for (int i = 1; i <= n; i++) {
             Gerenciador.inserir(i, "registro " + i);
         }
-        verificar("arvore valida (ordem, alturas e fatores)", arvoreValida());
+        verificar("br.com.mecaniqa.arvore valida (ordem, alturas e fatores)", arvoreValida());
         System.out.println("Altura da raiz: " + Gerenciador.raiz.altura + " (uma lista encadeada teria " + n + ")");
         verificar("busca do id 77777", "registro 77777".equals(Gerenciador.buscar(77777)));
 
@@ -68,7 +71,7 @@ public class Testeavl {
         for (int id : ids) {
             Gerenciador.inserir(id, "registro " + id);
         }
-        verificar("arvore valida", arvoreValida());
+        verificar("br.com.mecaniqa.arvore valida", arvoreValida());
     }
 
     private static No novoNo(int id) {

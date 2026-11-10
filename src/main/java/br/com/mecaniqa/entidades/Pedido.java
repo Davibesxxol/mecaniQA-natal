@@ -1,4 +1,4 @@
-package br.com.mecaniqa;
+package br.com.mecaniqa.entidades;
 
 import java.util.ArrayList;
 

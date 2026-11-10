@@ -1,5 +1,10 @@
 package br.com.mecaniqa;
 
+import entidades.Gerenciador;
+import entidades.Peca;
+import entidades.Servico;
+import enums.ChaveOrdenacao;
+
 public class TesteOrdenacao {
 
     public static void main(String[] args) {

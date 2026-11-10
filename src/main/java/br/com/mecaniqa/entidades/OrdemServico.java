@@ -1,4 +1,6 @@
-package br.com.mecaniqa;
+package br.com.mecaniqa.entidades;
+
+import br.com.mecaniqa.enums.StatusOS;
 
 import java.util.ArrayList;
 import java.util.Queue;

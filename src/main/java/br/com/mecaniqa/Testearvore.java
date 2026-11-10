@@ -1,5 +1,8 @@
 package br.com.mecaniqa;
 
+import entidades.Cliente;
+import entidades.Gerenciador;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -30,7 +33,7 @@ public class Testearvore {
         Gerenciador.inserir(80, null);
 
         System.out.println();
-        System.out.println("=== Comparacao: arvore x busca linear ===");
+        System.out.println("=== Comparacao: br.com.mecaniqa.arvore x busca linear ===");
 
         int n = 100000;
         ArrayList<Integer> lista = new ArrayList<>();

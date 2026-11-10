@@ -1,5 +1,10 @@
 package br.com.mecaniqa;
 
+import csv.PersistenciaCSV;
+import entidades.Gerenciador;
+import entidades.Peca;
+import entidades.Servico;
+
 import java.util.Scanner;
 
 public class MecaniQAApplication {

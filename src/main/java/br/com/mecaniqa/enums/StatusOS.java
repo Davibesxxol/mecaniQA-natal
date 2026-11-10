@@ -1,4 +1,4 @@
-package br.com.mecaniqa;
+package br.com.mecaniqa.enums;
 
 public enum StatusOS {
     EM_ABERTO,

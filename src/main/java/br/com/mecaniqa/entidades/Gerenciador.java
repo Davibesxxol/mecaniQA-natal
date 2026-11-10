@@ -7,234 +7,101 @@ import java.util.ArrayList;
 
 public class Gerenciador {
 
-    public static Peca[] pecas = new Peca[100];
-    public static Servico[] servicos = new Servico[50];
-
-    public static int totalPecas = 0;
-    public static int totalServicos = 0;
-
-    public static No raiz = null;
-
-    public static ArrayList<Cliente> clientes = new ArrayList<>();
-    public static ArrayList<Pedido> pedidos = new ArrayList<>();
-    public static ArrayList<OrdemServico> ordens = new ArrayList<>();
+    public static No raizPecas = null;
+    public static No raizServicos = null;
+    public static No raizClientes = null;
+    public static No raizOS = null;
 
     private static int proximoCodigoPeca = 1;
     private static int proximoCodigoServico = 1;
 
+
     public static void inserirPeca(Peca p) {
-        if (totalPecas >= pecas.length) {
-            System.out.println("Erro: nao ha espaco disponivel para inserir a peca.");
-            return;
+        if (p.codigo == 0) {
+            p.codigo = proximoCodigoPeca++;
+        } else if (p.codigo >= proximoCodigoPeca) { 
+            proximoCodigoPeca = p.codigo + 1;
         }
-        p.codigo = proximoCodigoPeca;
-        proximoCodigoPeca++;
-        pecas[totalPecas] = p;
-        totalPecas++;
-        System.out.println("Peca cadastrada com sucesso! Codigo gerado: " + p.codigo);
+        raizPecas = inserirNo(raizPecas, p.codigo, p);
+        System.out.println("Peça indexada na Árvore com sucesso! Código: " + p.codigo);
     }
 
     public static void inserirServico(Servico s) {
-        if (totalServicos >= servicos.length) {
-            System.out.println("Erro: nao ha espaco disponivel para inserir o servico.");
-            return;
+        if (s.codigo == 0) {
+            s.codigo = proximoCodigoServico++;
+        } else if (s.codigo >= proximoCodigoServico) {
+            proximoCodigoServico = s.codigo + 1;
         }
-        s.codigo = proximoCodigoServico;
-        proximoCodigoServico++;
-        servicos[totalServicos] = s;
-        totalServicos++;
-        System.out.println("Servico cadastrado com sucesso! Codigo gerado: " + s.codigo);
+        raizServicos = inserirNo(raizServicos, s.codigo, s);
+        System.out.println("Serviço indexado na Árvore com sucesso! Código: " + s.codigo);
     }
 
     public static void listarPecas() {
-        if (totalPecas == 0) {
-            System.out.println("Nenhuma peca cadastrada.");
+        if (raizPecas == null) {
+            System.out.println("Nenhuma peça cadastrada na árvore.");
             return;
         }
-        for (int i = 0; i < totalPecas; i++) {
-            Peca p = pecas[i];
-            System.out.println(
-                    "Codigo: " + p.codigo +
-                            " | Nome: " + p.nome +
-                            " | Fabricante: " + p.fabricante +
-                            " | Preco Custo: R$" + p.precoCusto +
-                            " | Preco Venda: R$" + p.precoVenda +
-                            " | Estoque: " + p.quantidadeEstoque
-            );
-        }
+        exibirEmOrdem(raizPecas); 
     }
 
     public static void listarServicos() {
-        if (totalServicos == 0) {
-            System.out.println("Nenhum servico cadastrado.");
+        if (raizServicos == null) {
+            System.out.println("Nenhum serviço cadastrado na árvore.");
             return;
         }
-        for (int i = 0; i < totalServicos; i++) {
-            Servico s = servicos[i];
-            System.out.println(
-                    "Codigo: " + s.codigo +
-                            " | Descricao: " + s.descricao +
-                            " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
-                            " | Valor mao de obra: R$" + s.valorMaoDeObra
-            );
-        }
+        exibirEmOrdem(raizServicos);
     }
 
-    public static int buscarPeca(int codigo) {
-        for (int i = 0; i < totalPecas; i++) {
-            if (pecas[i].codigo == codigo) {
-                return i;
-            }
+    public static Peca buscarPeca(int codigo) {
+        Object obj = buscarNo(raizPecas, codigo);
+        if (obj instanceof Peca) {
+            return (Peca) obj;
         }
-        return -1;
+        return null; 
     }
 
-    public static int buscarServico(int codigo) {
-        for (int i = 0; i < totalServicos; i++) {
-            if (servicos[i].codigo == codigo) {
-                return i;
-            }
+    public static Servico buscarServico(int codigo) {
+        Object obj = buscarNo(raizServicos, codigo);
+        if (obj instanceof Servico) {
+            return (Servico) obj;
         }
-        return -1;
+        return null;
     }
 
     public static void atualizarPeca(int codigo, Peca novosDados) {
-        int indice = buscarPeca(codigo);
-
-        if (indice == -1) {
-            System.out.println("Erro: peca com codigo " + codigo + " nao encontrada.");
+        Peca p = buscarPeca(codigo);
+        if (p == null) {
+            System.out.println("Erro: Peça não encontrada na árvore.");
             return;
         }
-
-        pecas[indice].nome = novosDados.nome;
-        pecas[indice].fabricante = novosDados.fabricante;
-        pecas[indice].precoCusto = novosDados.precoCusto;
-        pecas[indice].precoVenda = novosDados.precoVenda;
-        pecas[indice].quantidadeEstoque = novosDados.quantidadeEstoque;
-
-        System.out.println("Peca atualizada com sucesso!");
+        p.nome = novosDados.nome;
+        p.fabricante = novosDados.fabricante;
+        p.precoCusto = novosDados.precoCusto;
+        p.precoVenda = novosDados.precoVenda;
+        p.quantidadeEstoque = novosDados.quantidadeEstoque;
+        System.out.println("Peça atualizada com sucesso!");
     }
 
     public static void atualizarServico(int codigo, Servico novosDados) {
-        int indice = buscarServico(codigo);
-
-        if (indice == -1) {
-            System.out.println("Erro: servico com codigo " + codigo + " nao encontrado.");
+        Servico s = buscarServico(codigo);
+        if (s == null) {
+            System.out.println("Erro: Serviço não encontrado na árvore.");
             return;
         }
-
-        servicos[indice].descricao = novosDados.descricao;
-        servicos[indice].tempoEstimadoMinutos = novosDados.tempoEstimadoMinutos;
-        servicos[indice].valorMaoDeObra = novosDados.valorMaoDeObra;
-
-        System.out.println("Servico atualizado com sucesso!");
+        s.descricao = novosDados.descricao;
+        s.tempoEstimadoMinutos = novosDados.tempoEstimadoMinutos;
+        s.valorMaoDeObra = novosDados.valorMaoDeObra;
+        System.out.println("Serviço atualizado com sucesso!");
     }
 
     public static void removerPeca(int codigo) {
-        int indice = buscarPeca(codigo);
-
-        if (indice == -1) {
-            System.out.println("Erro: peca com codigo " + codigo + " nao encontrada.");
-            return;
-        }
-
-        for (int i = indice; i < totalPecas - 1; i++) {
-            pecas[i] = pecas[i + 1];
-        }
-
-        pecas[totalPecas - 1] = null;
-        totalPecas--;
-        System.out.println("Peca removida com sucesso!");
+        System.out.println("Aviso: A remoção de nós na AVL será implementada via inativação lógica.");
     }
-
+    
     public static void removerServico(int codigo) {
-        int indice = buscarServico(codigo);
-
-        if (indice == -1) {
-            System.out.println("Erro: servico com codigo " + codigo + " nao encontrado.");
-            return;
-        }
-
-        for (int i = indice; i < totalServicos - 1; i++) {
-            servicos[i] = servicos[i + 1];
-        }
-
-        servicos[totalServicos - 1] = null;
-        totalServicos--;
-        System.out.println("Servico removido com sucesso!");
+         System.out.println("Aviso: A remoção de nós na AVL será implementada via inativação lógica.");
     }
 
-    public static void ordenarPecas(ChaveOrdenacao chave) {
-        for (int i = 0; i < totalPecas - 1; i++) {
-            for (int j = 0; j < totalPecas - 1 - i; j++) {
-
-                boolean trocar;
-                if (chave == ChaveOrdenacao.NOME) {
-                    trocar = pecas[j].nome.compareTo(pecas[j + 1].nome) > 0;
-                } else {
-                    trocar = pecas[j].codigo > pecas[j + 1].codigo;
-                }
-
-                if (trocar) {
-                    Peca temp = pecas[j];
-                    pecas[j] = pecas[j + 1];
-                    pecas[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-    public static void ordenarServicos(ChaveOrdenacao chave) {
-        for (int i = 0; i < totalServicos - 1; i++) {
-            for (int j = 0; j < totalServicos - 1 - i; j++) {
-
-                boolean trocar;
-                if (chave == ChaveOrdenacao.NOME) {
-                    trocar = servicos[j].descricao.compareTo(servicos[j + 1].descricao) > 0;
-                } else {
-                    trocar = servicos[j].codigo > servicos[j + 1].codigo;
-                }
-
-                if (trocar) {
-                    Servico temp = servicos[j];
-                    servicos[j] = servicos[j + 1];
-                    servicos[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-    public static void carregarPeca(Peca p) {
-        if (totalPecas >= pecas.length) {
-            System.out.println("Erro: array de pecas cheio, peca " + p.codigo + " nao carregada.");
-            return;
-        }
-        pecas[totalPecas] = p;
-        totalPecas++;
-        if (p.codigo >= proximoCodigoPeca) {
-            proximoCodigoPeca = p.codigo + 1;
-        }
-    }
-
-    public static void carregarServico(Servico s) {
-        if (totalServicos >= servicos.length) {
-            System.out.println("Erro: array de servicos cheio, servico " + s.codigo + " nao carregado.");
-            return;
-        }
-        servicos[totalServicos] = s;
-        totalServicos++;
-        if (s.codigo >= proximoCodigoServico) {
-            proximoCodigoServico = s.codigo + 1;
-        }
-    }
-
-    public static void inserir(int id, Object registro) {
-        if (registro == null) {
-            System.out.println("Erro: nao e possivel indexar um registro nulo.");
-            return;
-        }
-        raiz = inserirNo(raiz, id, registro);
-    }
 
     private static No inserirNo(No atual, int id, Object registro) {
         if (atual == null) {

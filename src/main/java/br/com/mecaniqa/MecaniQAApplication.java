@@ -32,6 +32,8 @@ public class MecaniQAApplication {
                 continue;
             }
 
+            // Boa, parabéns! Excelente integração completa de todas as opções do menu com o Gerenciador,
+            // mantendo a camada de entrada/saída (Scanner) bem separada da lógica de negócio!
             switch (choice) {
                 case 1:
                     adicionarPeca(scanner);

@@ -2,22 +2,28 @@ package br.com.mecaniqa;
 
 public class Gerenciador {
 
+    // Boa, parabéns! O uso de arrays estáticos unidimensionais de tamanho fixo ajuda a realizar o
+    // armazenamento de dados corretamente sem depender de Collections (java.util).
     public static Peca[] pecas = new Peca[100];
     public static Servico[] servicos = new Servico[50];
 
     public static int totalPecas = 0;
     public static int totalServicos = 0;
 
+    // Boa, parabéns! Separar os contadores de código sequencial (proximoCodigoPeca/Servico) das variáveis
+    // de quantidade (totalPecas/Servicos) evita códigos duplicados após remoções!
     private static int proximoCodigoPeca = 1;
     private static int proximoCodigoServico = 1;
 
     public static void inserirPeca(Peca p) {
         if (totalPecas >= pecas.length) {
             System.out.println("Erro: nao ha espaco disponivel para inserir a peca.");
-            return;
+            return; // bom uso de early return! Ajuda na legibilidade e evita aninhamento desnecessário.
         }
         p.codigo = proximoCodigoPeca;
         proximoCodigoPeca++;
+        // Boa, parabéns! O uso da variável controladora totalPecas como índice realiza
+        // a inserção em O(1) no primeiro espaço vazio.
         pecas[totalPecas] = p;
         totalPecas++;
         System.out.println("Peca cadastrada com sucesso! Codigo gerado: " + p.codigo);
@@ -30,6 +36,7 @@ public class Gerenciador {
         }
         s.codigo = proximoCodigoServico;
         proximoCodigoServico++;
+        // Boa, parabéns! Inserção direta em O(1) usando totalServicos.
         servicos[totalServicos] = s;
         totalServicos++;
         System.out.println("Servico cadastrado com sucesso! Codigo gerado: " + s.codigo);
@@ -42,6 +49,7 @@ public class Gerenciador {
         }
         for (int i = 0; i < totalPecas; i++) {
             Peca p = pecas[i];
+            // Dica: usar System.out.printf com %.2f deixaria os valores monetários sempre formatados com duas casas decimais.
             System.out.println(
                 "Codigo: " + p.codigo +
                 " | Nome: " + p.nome +
@@ -70,6 +78,7 @@ public class Gerenciador {
     }
 
     public static int buscarPeca(int codigo) {
+        // Boa, parabéns! Busca linear limpa e correta, percorrendo apenas até totalPecas e retornando índice ou -1.
         for (int i = 0; i < totalPecas; i++) {
             if (pecas[i].codigo == codigo) {
                 return i;
@@ -79,6 +88,7 @@ public class Gerenciador {
     }
 
     public static int buscarServico(int codigo) {
+        // Boa, parabéns! Busca linear implementada corretamente.
         for (int i = 0; i < totalServicos; i++) {
             if (servicos[i].codigo == codigo) {
                 return i;
@@ -88,6 +98,8 @@ public class Gerenciador {
     }
 
     public static void atualizarPeca(int codigo, Peca novosDados) {
+        // Boa, parabéns! O uso da chamada da busca linear já implementada ajuda a
+        // realizar a reutilização de código no processo de atualização, modificando os atributos públicos diretamente.
         int indice = buscarPeca(codigo);
 
         if (indice == -1) {
@@ -105,6 +117,7 @@ public class Gerenciador {
     }
 
     public static void atualizarServico(int codigo, Servico novosDados) {
+        // Boa, parabéns! Reutilização da busca linear e acesso direto aos atributos da struct.
         int indice = buscarServico(codigo);
 
         if (indice == -1) {
@@ -120,6 +133,8 @@ public class Gerenciador {
     }
 
     public static void removerPeca(int codigo) {
+        // Boa, parabéns! Reutiliza buscarPeca, desloca os elementos à esquerda (shift-left) sem deixar buracos,
+        // limpa a última posição com null e decrementa totalPecas.
         int indice = buscarPeca(codigo);
 
         if (indice == -1) {
@@ -137,6 +152,7 @@ public class Gerenciador {
     }
 
     public static void removerServico(int codigo) {
+        // Boa, parabéns! Mesma lógica impecável de remoção com busca linear, shift-left e limpeza da última posição.
         int indice = buscarServico(codigo);
 
         if (indice == -1) {

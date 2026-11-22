@@ -1,6 +1,9 @@
 package br.com.mecaniqa.csv;
 
-import br.com.mecaniqa.entidades.*;
+import br.com.mecaniqa.entidades.Gerenciador;
+import br.com.mecaniqa.entidades.OrdemServico;
+import br.com.mecaniqa.entidades.Peca;
+import br.com.mecaniqa.entidades.Servico;
 import br.com.mecaniqa.enums.StatusOS;
 
 import java.io.BufferedReader;
@@ -15,13 +18,10 @@ import java.util.ArrayList;
 public class PersistenciaCSV {
 
     private static final String PASTA = "dados/";
-    private static final String ARQ_PECAS = PASTA + "pecas.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_SERVICOS = PASTA + "servicos.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_CLIENTES = PASTA + "clientes.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_PEDIDOS = PASTA + "pedidos.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_ITENS_PEDIDO = PASTA + "itens_pedido.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_ORDENS = PASTA + "ordens_servico.br.com.br.com.mecaniqa.csv";
-    private static final String ARQ_SERVICOS_OS = PASTA + "servicos_os.br.com.br.com.mecaniqa.csv";
+    private static final String ARQ_PECAS = PASTA + "pecas.csv";
+    private static final String ARQ_SERVICOS = PASTA + "servicos.csv";
+    private static final String ARQ_ORDENS = PASTA + "ordens_servico.csv";
+    private static final String ARQ_SERVICOS_OS = PASTA + "servicos_os.csv";
 
     public static boolean existemDados() {
         return new File(ARQ_PECAS).exists();
@@ -30,43 +30,32 @@ public class PersistenciaCSV {
     public static void salvarTudo() {
         new File(PASTA).mkdirs();
 
-        ArrayList<String> linhas = new ArrayList<>();
-        for (int i = 0; i < Gerenciador.totalPecas; i++) {
-            linhas.add(Gerenciador.pecas[i].toCSV());
-        }
-        gravar(ARQ_PECAS, linhas);
-
-        linhas = new ArrayList<>();
-        for (int i = 0; i < Gerenciador.totalServicos; i++) {
-            linhas.add(Gerenciador.servicos[i].toCSV());
-        }
-        gravar(ARQ_SERVICOS, linhas);
-
-        linhas = new ArrayList<>();
-        for (Cliente c : Gerenciador.clientes) {
-            linhas.add(c.toCSV());
-        }
-        gravar(ARQ_CLIENTES, linhas);
-
-        ArrayList<String> linhasPedidos = new ArrayList<>();
-        ArrayList<String> linhasItens = new ArrayList<>();
-        for (Pedido p : Gerenciador.pedidos) {
-            linhasPedidos.add(p.toCSV());
-            for (ItemPedido item : p.itens) {
-                linhasItens.add(p.codigo + ";" + item.peca.codigo + ";" + item.quantidade);
+        ArrayList<String> linhasPecas = new ArrayList<>();
+        Gerenciador.percorrerEmOrdem(Gerenciador.raizPecas, reg -> {
+            if (reg instanceof Peca p) {
+                linhasPecas.add(p.toCSV());
             }
-        }
-        gravar(ARQ_PEDIDOS, linhasPedidos);
-        gravar(ARQ_ITENS_PEDIDO, linhasItens);
+        });
+        gravar(ARQ_PECAS, linhasPecas);
+
+        ArrayList<String> linhasServicos = new ArrayList<>();
+        Gerenciador.percorrerEmOrdem(Gerenciador.raizServicos, reg -> {
+            if (reg instanceof Servico s) {
+                linhasServicos.add(s.toCSV());
+            }
+        });
+        gravar(ARQ_SERVICOS, linhasServicos);
 
         ArrayList<String> linhasOrdens = new ArrayList<>();
         ArrayList<String> linhasServicosOS = new ArrayList<>();
-        for (OrdemServico os : Gerenciador.ordens) {
-            linhasOrdens.add(os.toCSV());
-            for (Servico s : os.servicos) {
-                linhasServicosOS.add(os.codigo + ";" + s.codigo);
+        Gerenciador.percorrerEmOrdem(Gerenciador.raizOS, reg -> {
+            if (reg instanceof OrdemServico os) {
+                linhasOrdens.add(os.toCSV());
+                for (Servico s : os.servicos) {
+                    linhasServicosOS.add(os.codigo + ";" + s.codigo);
+                }
             }
-        }
+        });
         gravar(ARQ_ORDENS, linhasOrdens);
         gravar(ARQ_SERVICOS_OS, linhasServicosOS);
 
@@ -76,7 +65,7 @@ public class PersistenciaCSV {
     public static void carregarTudo() {
         for (String linha : ler(ARQ_PECAS)) {
             try {
-                Gerenciador.carregarPeca(Peca.fromCSV(linha));
+                Gerenciador.inserirPeca(Peca.fromCSV(linha));
             } catch (RuntimeException e) {
                 System.out.println("Linha invalida em " + ARQ_PECAS + ": " + linha);
             }
@@ -84,49 +73,16 @@ public class PersistenciaCSV {
 
         for (String linha : ler(ARQ_SERVICOS)) {
             try {
-                Gerenciador.carregarServico(Servico.fromCSV(linha));
+                Gerenciador.inserirServico(Servico.fromCSV(linha));
             } catch (RuntimeException e) {
                 System.out.println("Linha invalida em " + ARQ_SERVICOS + ": " + linha);
             }
         }
 
-        for (String linha : ler(ARQ_CLIENTES)) {
-            try {
-                Gerenciador.clientes.add(Cliente.fromCSV(linha));
-            } catch (RuntimeException e) {
-                System.out.println("Linha invalida em " + ARQ_CLIENTES + ": " + linha);
-            }
-        }
-
-        for (String linha : ler(ARQ_PEDIDOS)) {
-            try {
-                Gerenciador.pedidos.add(Pedido.fromCSV(linha));
-            } catch (RuntimeException e) {
-                System.out.println("Linha invalida em " + ARQ_PEDIDOS + ": " + linha);
-            }
-        }
-
-        for (String linha : ler(ARQ_ITENS_PEDIDO)) {
-            try {
-                String[] c = linha.split(";");
-                Pedido pedido = buscarPedido(Integer.parseInt(c[0]));
-                int indicePeca = Gerenciador.buscarPeca(Integer.parseInt(c[1]));
-                if (pedido == null || indicePeca == -1) {
-                    System.out.println("Item ignorado, pedido ou peca nao encontrados: " + linha);
-                    continue;
-                }
-                ItemPedido item = new ItemPedido();
-                item.peca = Gerenciador.pecas[indicePeca];
-                item.quantidade = Integer.parseInt(c[2]);
-                pedido.itens.add(item);
-            } catch (RuntimeException e) {
-                System.out.println("Linha invalida em " + ARQ_ITENS_PEDIDO + ": " + linha);
-            }
-        }
-
         for (String linha : ler(ARQ_ORDENS)) {
             try {
-                Gerenciador.ordens.add(OrdemServico.fromCSV(linha));
+                OrdemServico os = OrdemServico.fromCSV(linha);
+                Gerenciador.inserirOS(os);
             } catch (RuntimeException e) {
                 System.out.println("Linha invalida em " + ARQ_ORDENS + ": " + linha);
             }
@@ -135,45 +91,31 @@ public class PersistenciaCSV {
         for (String linha : ler(ARQ_SERVICOS_OS)) {
             try {
                 String[] c = linha.split(";");
-                OrdemServico os = buscarOrdem(Integer.parseInt(c[0]));
-                int indiceServico = Gerenciador.buscarServico(Integer.parseInt(c[1]));
-                if (os == null || indiceServico == -1) {
+                int codigoOS = Integer.parseInt(c[0]);
+                int codigoServico = Integer.parseInt(c[1]);
+
+                OrdemServico os = Gerenciador.buscarOS(codigoOS);
+                Servico servico = Gerenciador.buscarServico(codigoServico);
+
+                if (os == null || servico == null) {
                     System.out.println("Servico ignorado, OS ou servico nao encontrados: " + linha);
                     continue;
                 }
-                os.servicos.add(Gerenciador.servicos[indiceServico]);
+                os.servicos.add(servico);
             } catch (RuntimeException e) {
                 System.out.println("Linha invalida em " + ARQ_SERVICOS_OS + ": " + linha);
             }
         }
 
-        for (OrdemServico os : Gerenciador.ordens) {
-            if (os.status == StatusOS.AGUARDANDO_EXECUCAO) {
+        Gerenciador.percorrerEmOrdem(Gerenciador.raizOS, reg -> {
+            if (reg instanceof OrdemServico os && os.status == StatusOS.AGUARDANDO_EXECUCAO) {
                 for (Servico s : os.servicos) {
                     OrdemServico.filaAtendimento.offer(s);
                 }
             }
-        }
+        });
 
         System.out.println("Dados carregados da pasta " + PASTA);
-    }
-
-    private static Pedido buscarPedido(int codigo) {
-        for (Pedido p : Gerenciador.pedidos) {
-            if (p.codigo == codigo) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    private static OrdemServico buscarOrdem(int codigo) {
-        for (OrdemServico os : Gerenciador.ordens) {
-            if (os.codigo == codigo) {
-                return os;
-            }
-        }
-        return null;
     }
 
     private static void gravar(String arquivo, ArrayList<String> linhas) {
@@ -204,5 +146,4 @@ public class PersistenciaCSV {
         }
         return linhas;
     }
-
 }

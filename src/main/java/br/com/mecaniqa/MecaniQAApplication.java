@@ -1,10 +1,15 @@
 package br.com.mecaniqa;
 
 import br.com.mecaniqa.csv.PersistenciaCSV;
-import entidades.Gerenciador;
-import entidades.Peca;
-import entidades.Servico;
+import br.com.mecaniqa.entidades.Gerenciador;
+import br.com.mecaniqa.entidades.OrdemServico;
+import br.com.mecaniqa.entidades.Peca;
+import br.com.mecaniqa.entidades.Servico;
+import br.com.mecaniqa.grafo.Dijkstra;
+import br.com.mecaniqa.grafo.Grafo;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class MecaniQAApplication {
@@ -29,6 +34,7 @@ public class MecaniQAApplication {
             System.out.println("9. Remover Serviço");
             System.out.println("10. Buscar Serviço por Código");
             System.out.println("-----------------------");
+            System.out.println("11. Rota de Entrega e Ordem de Serviço");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -70,12 +76,14 @@ public class MecaniQAApplication {
                 case 10:
                     buscarServico(scanner);
                     break;
+                case 11:
+                    executarRotaComOS(scanner);
+                    break;
                 case 0:
                     PersistenciaCSV.salvarTudo();
                     System.out.println("Saindo do sistema...");
                     scanner.close();
                     break;
-
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
@@ -107,8 +115,8 @@ public class MecaniQAApplication {
         System.out.print("Código da peça a atualizar: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarPeca(codigo);
-        if (indice == -1) {
+        Peca existente = Gerenciador.buscarPeca(codigo);
+        if (existente == null) {
             System.out.println("Peça não encontrada.");
             return;
         }
@@ -144,13 +152,12 @@ public class MecaniQAApplication {
         System.out.print("Código da peça a buscar: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarPeca(codigo);
-        if (indice == -1) {
+        Peca p = Gerenciador.buscarPeca(codigo);
+        if (p == null) {
             System.out.println("Peça não encontrada.");
             return;
         }
 
-        Peca p = Gerenciador.pecas[indice];
         System.out.println(
                 "Codigo: " + p.codigo +
                         " | Nome: " + p.nome +
@@ -180,8 +187,8 @@ public class MecaniQAApplication {
         System.out.print("Código do serviço a atualizar: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarServico(codigo);
-        if (indice == -1) {
+        Servico existente = Gerenciador.buscarServico(codigo);
+        if (existente == null) {
             System.out.println("Serviço não encontrado.");
             return;
         }
@@ -211,19 +218,49 @@ public class MecaniQAApplication {
         System.out.print("Código do serviço a buscar: ");
         int codigo = lerInt(scanner);
 
-        int indice = Gerenciador.buscarServico(codigo);
-        if (indice == -1) {
+        Servico s = Gerenciador.buscarServico(codigo);
+        if (s == null) {
             System.out.println("Serviço não encontrado.");
             return;
         }
 
-        Servico s = Gerenciador.servicos[indice];
         System.out.println(
                 "Codigo: " + s.codigo +
                         " | Descricao: " + s.descricao +
                         " | Tempo estimado (min): " + s.tempoEstimadoMinutos +
                         " | Valor mao de obra: R$" + s.valorMaoDeObra
         );
+    }
+
+    private static void executarRotaComOS(Scanner scanner) {
+        List<String> filiais = Arrays.asList("CD Central", "Filial A", "Filial B", "Filial C");
+        Grafo mapa = new Grafo(filiais.size());
+        mapa.adicionarAresta(0, 1, 10);
+        mapa.adicionarAresta(0, 2, 25);
+        mapa.adicionarAresta(1, 3, 15);
+        mapa.adicionarAresta(2, 3, 5);
+
+        System.out.println("\nFiliais disponíveis:");
+        for (int i = 0; i < filiais.size(); i++) {
+            System.out.println(i + " - " + filiais.get(i));
+        }
+
+        System.out.print("ID da origem: ");
+        int origem = lerInt(scanner);
+
+        System.out.print("ID do destino: ");
+        int destino = lerInt(scanner);
+
+        System.out.print("Código da Ordem de Serviço: ");
+        int codigoOS = lerInt(scanner);
+
+        if (origem < 0 || origem >= filiais.size() || destino < 0 || destino >= filiais.size()) {
+            System.out.println("Origem ou destino fora do intervalo de filiais.");
+            return;
+        }
+
+        OrdemServico os = Gerenciador.buscarOS(codigoOS);
+        Dijkstra.calcularMenorCaminho(mapa, origem, destino, filiais, codigoOS, os);
     }
 
     private static int lerInt(Scanner scanner) {
@@ -245,5 +282,4 @@ public class MecaniQAApplication {
             }
         }
     }
-
 }

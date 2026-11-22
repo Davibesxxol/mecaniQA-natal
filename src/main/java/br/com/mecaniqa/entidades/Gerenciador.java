@@ -1,9 +1,8 @@
 package br.com.mecaniqa.entidades;
 
-import br.com.mecaniqa.enums.ChaveOrdenacao;
 import br.com.mecaniqa.nos.No;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Gerenciador {
 
@@ -15,11 +14,10 @@ public class Gerenciador {
     private static int proximoCodigoPeca = 1;
     private static int proximoCodigoServico = 1;
 
-
     public static void inserirPeca(Peca p) {
         if (p.codigo == 0) {
             p.codigo = proximoCodigoPeca++;
-        } else if (p.codigo >= proximoCodigoPeca) { 
+        } else if (p.codigo >= proximoCodigoPeca) {
             proximoCodigoPeca = p.codigo + 1;
         }
         raizPecas = inserirNo(raizPecas, p.codigo, p);
@@ -36,12 +34,19 @@ public class Gerenciador {
         System.out.println("Serviço indexado na Árvore com sucesso! Código: " + s.codigo);
     }
 
+    public static void inserirOS(OrdemServico os) {
+        if (os == null) {
+            return;
+        }
+        raizOS = inserirNo(raizOS, os.codigo, os);
+    }
+
     public static void listarPecas() {
         if (raizPecas == null) {
             System.out.println("Nenhuma peça cadastrada na árvore.");
             return;
         }
-        exibirEmOrdem(raizPecas); 
+        exibirEmOrdem(raizPecas);
     }
 
     public static void listarServicos() {
@@ -54,16 +59,32 @@ public class Gerenciador {
 
     public static Peca buscarPeca(int codigo) {
         Object obj = buscarNo(raizPecas, codigo);
-        if (obj instanceof Peca) {
-            return (Peca) obj;
+        if (obj instanceof Peca p) {
+            return p;
         }
-        return null; 
+        return null;
     }
 
     public static Servico buscarServico(int codigo) {
         Object obj = buscarNo(raizServicos, codigo);
-        if (obj instanceof Servico) {
-            return (Servico) obj;
+        if (obj instanceof Servico s) {
+            return s;
+        }
+        return null;
+    }
+
+    public static OrdemServico buscarOS(int codigo) {
+        Object obj = buscarNo(raizOS, codigo);
+        if (obj instanceof OrdemServico os) {
+            return os;
+        }
+        return null;
+    }
+
+    public static Cliente buscarCliente(int codigo) {
+        Object obj = buscarNo(raizClientes, codigo);
+        if (obj instanceof Cliente c) {
+            return c;
         }
         return null;
     }
@@ -97,11 +118,10 @@ public class Gerenciador {
     public static void removerPeca(int codigo) {
         System.out.println("Aviso: A remoção de nós na AVL será implementada via inativação lógica.");
     }
-    
-    public static void removerServico(int codigo) {
-         System.out.println("Aviso: A remoção de nós na AVL será implementada via inativação lógica.");
-    }
 
+    public static void removerServico(int codigo) {
+        System.out.println("Aviso: A remoção de nós na AVL será implementada via inativação lógica.");
+    }
 
     private static No inserirNo(No atual, int id, Object registro) {
         if (atual == null) {
@@ -126,6 +146,10 @@ public class Gerenciador {
     }
 
     public static Object buscar(int id) {
+        return buscarNo(raizPecas, id);
+    }
+
+    public static Object buscarPorRaiz(No raiz, int id) {
         return buscarNo(raiz, id);
     }
 
@@ -149,6 +173,15 @@ public class Gerenciador {
         exibirEmOrdem(raiz.esquerda);
         exibirRegistro(raiz);
         exibirEmOrdem(raiz.direita);
+    }
+
+    public static void percorrerEmOrdem(No raiz, Consumer<Object> acao) {
+        if (raiz == null) {
+            return;
+        }
+        percorrerEmOrdem(raiz.esquerda, acao);
+        acao.accept(raiz.registro);
+        percorrerEmOrdem(raiz.direita, acao);
     }
 
     private static void exibirRegistro(No no) {
@@ -247,5 +280,4 @@ public class Gerenciador {
         no.direita = rotacaoDireita(no.direita);
         return rotacaoEsquerda(no);
     }
-
 }

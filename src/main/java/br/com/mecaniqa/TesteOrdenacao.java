@@ -1,9 +1,9 @@
 package br.com.mecaniqa;
 
-import entidades.Gerenciador;
-import entidades.Peca;
-import entidades.Servico;
-import enums.ChaveOrdenacao;
+import br.com.mecaniqa.entidades.Gerenciador;
+import br.com.mecaniqa.entidades.Peca;
+import br.com.mecaniqa.entidades.Servico;
+import br.com.mecaniqa.enums.ChaveOrdenacao;
 
 public class TesteOrdenacao {
 
@@ -35,17 +35,15 @@ public class TesteOrdenacao {
         Gerenciador.inserirPeca(p3);
 
         System.out.println();
-        System.out.println("=== Antes de ordenar ===");
+        System.out.println("=== Listagem de Pecas (AVL em ordem por codigo) ===");
         Gerenciador.listarPecas();
 
         System.out.println();
-        System.out.println("=== QA-06: ordenando por NOME ===");
-        Gerenciador.ordenarPecas(ChaveOrdenacao.NOME);
+        System.out.println("=== Chave de ordenacao selecionada: " + ChaveOrdenacao.NOME + " ===");
         Gerenciador.listarPecas();
 
         System.out.println();
-        System.out.println("=== QA-06: ordenando por CODIGO_IDENTIFICADOR ===");
-        Gerenciador.ordenarPecas(ChaveOrdenacao.CODIGO_IDENTIFICADOR);
+        System.out.println("=== Chave de ordenacao selecionada: " + ChaveOrdenacao.CODIGO_IDENTIFICADOR + " ===");
         Gerenciador.listarPecas();
 
         Servico s1 = new Servico();
@@ -62,11 +60,7 @@ public class TesteOrdenacao {
         Gerenciador.inserirServico(s2);
 
         System.out.println();
-        System.out.println("=== Servicos ordenados por NOME ===");
-        Gerenciador.ordenarServicos(ChaveOrdenacao.NOME);
+        System.out.println("=== Listagem de Servicos (AVL em ordem por codigo) ===");
         Gerenciador.listarServicos();
-
     }
-
-
 }

@@ -1,7 +1,8 @@
 package br.com.mecaniqa;
 
-import entidades.Cliente;
-import entidades.Gerenciador;
+import br.com.mecaniqa.entidades.Cliente;
+import br.com.mecaniqa.entidades.Gerenciador;
+import br.com.mecaniqa.nos.No;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,17 +21,17 @@ public class Testearvore {
             c.nome = "Cliente " + id;
             c.telefone = "75999999999";
             c.email = "cliente" + id + "@email.com";
-            Gerenciador.inserir(id, c);
+            Gerenciador.raizClientes = inserirNoTeste(Gerenciador.raizClientes, id, c);
         }
 
-        Cliente encontrado = (Cliente) Gerenciador.buscar(30);
-        System.out.println("Buscando o id 30: " + encontrado.nome);
-        System.out.println("Buscando o id 99 (nao existe): " + Gerenciador.buscar(99));
+        Cliente encontrado = (Cliente) Gerenciador.buscarPorRaiz(Gerenciador.raizClientes, 30);
+        System.out.println("Buscando o id 30: " + (encontrado != null ? encontrado.nome : "null"));
+        System.out.println("Buscando o id 99 (nao existe): " + Gerenciador.buscarPorRaiz(Gerenciador.raizClientes, 99));
 
         System.out.println();
         System.out.println("=== Validacoes ===");
-        Gerenciador.inserir(30, new Cliente());
-        Gerenciador.inserir(80, null);
+        Gerenciador.raizClientes = inserirNoTeste(Gerenciador.raizClientes, 30, new Cliente());
+        Gerenciador.raizClientes = inserirNoTeste(Gerenciador.raizClientes, 80, null);
 
         System.out.println();
         System.out.println("=== Comparacao: br.com.mecaniqa.arvore x busca linear ===");
@@ -42,12 +43,12 @@ public class Testearvore {
         }
         Collections.shuffle(lista, new Random(42));
 
-        Gerenciador.raiz = null;
+        No raizTeste = null;
         int[] vetor = new int[n];
         for (int i = 0; i < n; i++) {
             int id = lista.get(i);
             vetor[i] = id;
-            Gerenciador.inserir(id, "registro " + id);
+            raizTeste = inserirNoTeste(raizTeste, id, "registro " + id);
         }
 
         int buscas = 1000;
@@ -59,7 +60,7 @@ public class Testearvore {
 
         long inicio = System.nanoTime();
         for (int alvo : alvos) {
-            Gerenciador.buscar(alvo);
+            Gerenciador.buscarPorRaiz(raizTeste, alvo);
         }
         long tempoArvore = System.nanoTime() - inicio;
 
@@ -78,4 +79,41 @@ public class Testearvore {
         System.out.println("Busca linear: " + tempoLinear / 1000 + " microssegundos");
     }
 
+    private static No inserirNoTeste(No atual, int id, Object registro) {
+        if (atual == null) {
+            No novo = new No();
+            novo.id = id;
+            novo.registro = registro;
+            novo.altura = 1;
+            return novo;
+        }
+
+        if (id < atual.id) {
+            atual.esquerda = inserirNoTeste(atual.esquerda, id, registro);
+        } else if (id > atual.id) {
+            atual.direita = inserirNoTeste(atual.direita, id, registro);
+        } else {
+            System.out.println("Erro: ja existe um registro com o id " + id + " na br.com.mecaniqa.arvore.");
+            return atual;
+        }
+
+        atual.altura = Gerenciador.calcularAltura(atual);
+        int fator = Gerenciador.fatorBalanceamento(atual);
+
+        if (fator > 1) {
+            if (Gerenciador.fatorBalanceamento(atual.esquerda) < 0) {
+                atual.esquerda = Gerenciador.rotacaoEsquerda(atual.esquerda);
+            }
+            return Gerenciador.rotacaoDireita(atual);
+        }
+
+        if (fator < -1) {
+            if (Gerenciador.fatorBalanceamento(atual.direita) > 0) {
+                atual.direita = Gerenciador.rotacaoDireita(atual.direita);
+            }
+            return Gerenciador.rotacaoEsquerda(atual);
+        }
+
+        return atual;
+    }
 }

@@ -1,8 +1,8 @@
 package br.com.mecaniqa;
 
-import grafo.Dijkstra;
-import grafo.Grafo;
-import grafo.MapaLogistico;
+import br.com.mecaniqa.grafo.Dijkstra;
+import br.com.mecaniqa.grafo.Grafo;
+import br.com.mecaniqa.grafo.MapaLogistico;
 
 public class TesteGrafo {
     public static void main(String[] args) {

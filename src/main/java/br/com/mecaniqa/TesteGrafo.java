@@ -11,11 +11,9 @@ public class TesteGrafo {
         Grafo mapa = MapaLogistico.carregarGrafoDoCsv("rotas.br.com.mecaniqa.csv");
 
         if (mapa != null) {
-            // Imprime o grafo para validar a mão dupla (ida e volta)
+
             mapa.imprimirGrafo(MapaLogistico.listaFiliais);
 
-            // 2. Testa o Algoritmo de Dijkstra
-            // Tenta calcular a rota do Centro de Distribuição até à Filial Tomba
             String origem = "Centro_Distribuicao";
             String destino = "Filial_Tomba";
 
